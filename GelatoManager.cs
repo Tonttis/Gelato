@@ -136,7 +136,7 @@ public sealed class GelatoManager(
         return TryGetFolder(cfg.AnimePath);
     }
 
-    public static bool IsAnime(StremioMeta meta, CatalogConfig? catalogCfg = null)
+    public static bool IsAnime(StremioMeta meta, CatalogConfig? catalogCfg = null, bool includeAnimationGenre = false)
     {
         if (catalogCfg?.IsAnime == true) return true;
         if (meta.Type == StremioMediaType.Anime) return true;
@@ -144,7 +144,8 @@ public sealed class GelatoManager(
         if (animeIdPrefixes.Any(p => meta.Id.StartsWith(p, StringComparison.OrdinalIgnoreCase)))
             return true;
         var genres = meta.Genres ?? meta.Genre ?? [];
-        return genres.Any(g => string.Equals(g, "Anime", StringComparison.OrdinalIgnoreCase));
+        return genres.Any(g => string.Equals(g, "Anime", StringComparison.OrdinalIgnoreCase)
+            || (includeAnimationGenre && string.Equals(g, "Animation", StringComparison.OrdinalIgnoreCase)));
     }
 
     private Folder? TryGetFolder(string path)
