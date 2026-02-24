@@ -325,7 +325,7 @@
                 Enabled: savedCat ? savedCat.Enabled : (serverCat.Enabled || false),
                 MaxItems: savedCat ? savedCat.MaxItems : (serverCat.MaxItems || 0),
                 CreateCollection: savedCat ? savedCat.CreateCollection : (serverCat.CreateCollection || false),
-                Url: serverCat.Url || ''
+                IsAnime: savedCat ? savedCat.IsAnime : false, Url: serverCat.Url || ''
               };
             });
             
@@ -370,7 +370,7 @@
                 <th style="padding: 10px;">Enabled</th>
                 <th style="padding: 10px;">Collection</th>
                 <th style="padding: 10px;">Max items</th>
-                <th style="padding: 10px;">Actions</th>
+                <th style="padding: 10px;">Anime</th><th style="padding: 10px;">Actions</th>
             `;
           table.appendChild(header);
 
@@ -435,7 +435,7 @@
             maxInput.dataset.field = 'MaxItems';
 
             maxCell.appendChild(maxInput);
-            row.appendChild(maxCell);
+            row.appendChild(maxCell); const animeCell = document.createElement('td'); animeCell.style.padding = '10px'; const animeCheck = document.createElement('input'); animeCheck.type = 'checkbox'; animeCheck.checked = cat.IsAnime || false; animeCheck.is = 'emby-checkbox'; animeCheck.dataset.catalogId = cat.Id; animeCheck.dataset.catalogType = cat.Type; animeCheck.dataset.field = 'IsAnime'; animeCell.appendChild(animeCheck); row.appendChild(animeCell);
 
             // Actions
             const actionCell = document.createElement('td');
@@ -507,7 +507,7 @@
 
             cat.Enabled = enabledCheck.checked;
             cat.CreateCollection = collCheck.checked;
-            cat.MaxItems = parseInt(maxInput.value) || 0;
+            cat.MaxItems = parseInt(maxInput.value) || 0; const animeCheckEl = row.querySelector('input[data-field="IsAnime"]'); if (animeCheckEl) cat.IsAnime = animeCheckEl.checked;
           });
         }
 
