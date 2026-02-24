@@ -259,7 +259,7 @@ public sealed class GelatoManager(
                 return (null, false);
             }
 
-            mediaType = meta.Type;
+            mediaType = meta.Type == StremioMediaType.Anime ? StremioMediaType.Series : meta.Type;
         }
 
         if (!meta.IsValid())
