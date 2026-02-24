@@ -312,7 +312,7 @@ public sealed class GelatoManager(
         }
         else
         {
-            baseItem = await SyncSeriesTreesAsync(cfg, meta, ct).ConfigureAwait(false);
+            baseItem = await SyncSeriesTreesAsync(parent, cfg, meta, ct).ConfigureAwait(false);
         }
 
         if (baseItem is null)
@@ -624,13 +624,13 @@ public sealed class GelatoManager(
     }
 
     public async Task<BaseItem?> SyncSeriesTreesAsync(
-        // Folder seriesRootFolder,
+        Folder seriesRootFolder,
         PluginConfiguration cfg,
         StremioMeta seriesMeta,
         CancellationToken ct
     )
     {
-        var seriesRootFolder = cfg.SeriesFolder;
+        
         // Early validation
         if (seriesRootFolder is null || string.IsNullOrWhiteSpace(seriesRootFolder.Path))
         {
