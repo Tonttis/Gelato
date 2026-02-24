@@ -32,14 +32,24 @@ public class InsertActionFilter(
             return;
         }
 
-        // Get root folder
-        var isSeries = stremioMeta.Type == StremioMediaType.Series;
-        var root = isSeries
-            ? manager.TryGetSeriesFolder(userId)
-            : manager.TryGetMovieFolder(userId);
+        // Get root folder - check anime first, then series/movie
+        Folder? root;
+        if (GelatoManager.IsAnime(stremioMeta))
+        {
+            root = manager.TryGetAnimeFolder(userId)
+                ?? manager.TryGetSeriesFolder(userId);
+        }
+        else
+        {
+            var isSeries = stremioMeta.Type == StremioMediaType.Series;
+            root = isSeries
+                ? manager.TryGetSeriesFolder(userId)
+                : manager.TryGetMovieFolder(userId);
+        }
+
         if (root is null)
         {
-            log.LogWarning("No {Type} folder configured", isSeries ? "Series" : "Movie");
+            log.LogWarning("No folder configured for {Type}", stremioMeta.Type);
             await next();
             return;
         }
@@ -61,7 +71,7 @@ public class InsertActionFilter(
 
         // Fetch full metadata
         var cfg = GelatoPlugin.Instance!.GetConfig(userId);
-        var meta = await cfg.Stremio.GetMetaAsync(
+        var meta = await cfg.Stremio!.GetMetaAsync(
             stremioMeta.ImdbId ?? stremioMeta.Id,
             stremioMeta.Type
         );
@@ -96,7 +106,6 @@ public class InsertActionFilter(
     {
         BaseItem? baseItem = null;
         var created = false;
-
         await _lock.RunQueuedAsync(
             guid,
             async ct =>
@@ -108,15 +117,13 @@ public class InsertActionFilter(
                     user,
                     false,
                     true,
-                    meta.Type is StremioMediaType.Series,
+                    meta.Type is StremioMediaType.Series or StremioMediaType.Anime,
                     ct
                 );
             }
         );
-
         if (baseItem is not null && created)
             log.LogInformation("inserted new media: {Name}", baseItem.Name);
-
         return baseItem;
     }
 }
