@@ -207,7 +207,7 @@ public sealed class GelatoManager(
         CancellationToken ct
     )
     {
-        // Normalize anime to series for insertion purposes         
+        // Normalize anime to series for insertion purposes
         var mediaType = meta.Type == StremioMediaType.Anime ? StremioMediaType.Series : meta.Type;
         BaseItem? existing;
 
@@ -630,7 +630,7 @@ public sealed class GelatoManager(
         CancellationToken ct
     )
     {
-        
+
         // Early validation
         if (seriesRootFolder is null || string.IsNullOrWhiteSpace(seriesRootFolder.Path))
         {
@@ -923,7 +923,7 @@ public sealed class GelatoManager(
                     );
                     continue;
                 }
-                await SyncSeriesTreesAsync(cfg, meta, cancellationToken);
+                await SyncSeriesTreesAsync(series.GetParent() as Folder ?? cfg.SeriesFolder!, cfg, meta, cancellationToken);
                 processed++;
             }
             catch (Exception ex)
