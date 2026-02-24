@@ -104,6 +104,7 @@ public class UserConfig
             FFmpegProbeSize = baseConfig.FFmpegProbeSize,
             CreateCollections = baseConfig.CreateCollections,
             MaxCollectionItems = baseConfig.MaxCollectionItems,
+            Catalogs = baseConfig.Catalogs,
             UserConfigs = baseConfig.UserConfigs,
         };
     }
