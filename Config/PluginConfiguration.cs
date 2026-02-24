@@ -107,7 +107,7 @@ public class UserConfig
             MaxCollectionItems = baseConfig.MaxCollectionItems,
             Catalogs = baseConfig.Catalogs,
             UserConfigs = baseConfig.UserConfigs,
-                AnimeIncludesAnimation = baseConfig.AnimeIncludesAnimation,
+            AnimeIncludesAnimation = baseConfig.AnimeIncludesAnimation,
         };
     }
 }
