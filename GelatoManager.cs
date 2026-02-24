@@ -207,7 +207,8 @@ public sealed class GelatoManager(
         CancellationToken ct
     )
     {
-        var mediaType = meta.Type;
+        // Normalize anime to series for insertion purposes         
+        var mediaType = meta.Type == StremioMediaType.Anime ? StremioMediaType.Series : meta.Type;
         BaseItem? existing;
 
         if (mediaType is not (StremioMediaType.Movie or StremioMediaType.Series))
