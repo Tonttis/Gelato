@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "category": "General",
+    "description": "Stream external media.\n",
+    "guid": "94EA4E14-8163-4989-96FE-0A2094BC2D6A",
+    "name": "Gelato",
+    "overview": "Stream external media.",
+    "owner": "lstb1t",
+    "versions": [
+      {
+        "changelog": "feat: anime library separation\r\n\r\n- Added separate anime library path configuration\r\n- Anime content is now handled independently from movies and shows",
+        "checksum": "a315764666cf4c1d3f6159c72650eb5d",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.3/gelato_0.26.5.3.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-02-24T15:23:07Z",
+        "version": "0.26.5.3"
+      }
+    ]
+  }
+]
