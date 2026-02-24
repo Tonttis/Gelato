@@ -110,7 +110,7 @@ public sealed class GelatoSeriesProvider : IRemoteMetadataProvider<Series, Serie
                 return;
             }
 
-            await _manager.SyncSeriesTreesAsync(cfg, meta, CancellationToken.None);
+            await _manager.SyncSeriesTreesAsync(seriesFolder, cfg, meta, CancellationToken.None);
         }
         catch (Exception ex)
         {
