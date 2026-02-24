@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## fix: Anime library routing\r\n\r\n### Bug Fix\r\nAnime was being routed to the Shows library instead of the Anime library.\r\n\r\n### Root Cause\r\nThe initial `IsAnime()` check used minimal search metadata (which has `Type=Series` and no genres). After fetching full metadata, the genres and type info needed to re-determine routing.\r\n\r\n### Fix\r\n- After `GetMetaAsync` returns full metadata, `IsAnime()` is re-evaluated with the complete meta (including genres like \"Anime\")\r\n- If the re-check returns true, the root folder is updated to the Anime folder before inserting\r\n- Logged as: `Re-routed {Name} to anime folder based on full metadata`\r\n\r\n### Result\r\nAnime content is now correctly routed to the configured AnimePath library.",
+        "checksum": "ef2713ab351f2808f6492f871e94d780",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.7/gelato_0.26.5.7.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-02-24T18:23:19Z",
+        "version": "0.26.5.7"
+      },
+      {
         "changelog": "## feat: Anime Library Support\r\n\r\n- Separate anime library path (`AnimePath`) - add a dedicated Jellyfin library pointing to this path\r\n- Auto-detection of anime via: `StremioMediaType.Anime`, anime ID prefixes (`anidb:`, `kitsu:`, `mal:`, `anilist:`), and `Anime` genre tag\r\n- Routing in `InsertActionFilter`: anime items go to the anime folder (falls back to series folder if not configured)\r\n- Catalog `IsAnime` flag: force all items from a catalog into the anime library (configurable per-catalog in the UI)\r\n- Per-user `AnimePath` override in User Configs\r\n- Correct folder passed through `SyncSeriesTreesAsync` so series tree is built in the right library\r\n\r\n**Full Changelog**: https://github.com/Tonttis/Gelato/compare/v0.26.5.5...v0.26.5.6",
         "checksum": "46471e1237e36cd0883ae34b5c80b13d",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.6/gelato_0.26.5.6.zip",
