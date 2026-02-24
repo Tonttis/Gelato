@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## feat: Anime Library Support\r\n\r\n- Separate anime library path (`AnimePath`) - add a dedicated Jellyfin library pointing to this path\r\n- Auto-detection of anime via: `StremioMediaType.Anime`, anime ID prefixes (`anidb:`, `kitsu:`, `mal:`, `anilist:`), and `Anime` genre tag\r\n- Routing in `InsertActionFilter`: anime items go to the anime folder (falls back to series folder if not configured)\r\n- Catalog `IsAnime` flag: force all items from a catalog into the anime library (configurable per-catalog in the UI)\r\n- Per-user `AnimePath` override in User Configs\r\n- Correct folder passed through `SyncSeriesTreesAsync` so series tree is built in the right library\r\n\r\n**Full Changelog**: https://github.com/Tonttis/Gelato/compare/v0.26.5.5...v0.26.5.6",
+        "checksum": "46471e1237e36cd0883ae34b5c80b13d",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.6/gelato_0.26.5.6.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-02-24T18:05:58Z",
+        "version": "0.26.5.6"
+      },
+      {
         "changelog": "- fix: populate AnimeFolder in GetConfig so anime routes to correct library",
         "checksum": "81cd26ef8949349c9b82fa14123332e2",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.5/gelato_0.26.5.5.zip",
