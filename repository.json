@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## fix: Anime routing via catalog IsAnime flag\r\n\r\n### Root Cause\r\nAnime was always routed to Shows because:\r\n1. Stremio search always returns `Type=Series` (not `Anime`)\r\n2. Full metadata from cinemeta doesn't include an `\"Anime\"` genre\r\n3. The `CatalogConfig.IsAnime` flag existed but was never connected to the search/insert flow\r\n\r\n### Fix\r\n- `GelatoStremioProvider`: expose `SeriesSearchCatalogId` property\r\n- `SearchActionFilter`: at search time, check if the Stremio search catalog matches any `IsAnime=true` catalog in config — if yes, override `meta.Type = Anime` before saving to cache\r\n- `InsertActionFilter`: normalize `Anime→Series` for the `GetMetaAsync` API call (Stremio has no anime endpoint), then restore `Anime` type for folder routing\r\n- `PluginConfiguration.ApplyOverrides`: copy `Catalogs` so per-user configs inherit catalog IsAnime flags\r\n\r\n### How to use\r\n1. In Gelato plugin settings → Catalog Config, find your series search catalog\r\n2. Enable **IsAnime** checkbox for that catalog\r\n3. Set **AnimePath** to your Jellyfin anime library path\r\n4. Anime searches will now route to the anime library",
+        "checksum": "42f1804d87c66b25e9794f8a31a70f50",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.8/gelato_0.26.5.8.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-02-24T18:46:02Z",
+        "version": "0.26.5.8"
+      },
+      {
         "changelog": "## fix: Anime library routing\r\n\r\n### Bug Fix\r\nAnime was being routed to the Shows library instead of the Anime library.\r\n\r\n### Root Cause\r\nThe initial `IsAnime()` check used minimal search metadata (which has `Type=Series` and no genres). After fetching full metadata, the genres and type info needed to re-determine routing.\r\n\r\n### Fix\r\n- After `GetMetaAsync` returns full metadata, `IsAnime()` is re-evaluated with the complete meta (including genres like \"Anime\")\r\n- If the re-check returns true, the root folder is updated to the Anime folder before inserting\r\n- Logged as: `Re-routed {Name} to anime folder based on full metadata`\r\n\r\n### Result\r\nAnime content is now correctly routed to the configured AnimePath library.",
         "checksum": "ef2713ab351f2808f6492f871e94d780",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.7/gelato_0.26.5.7.zip",
