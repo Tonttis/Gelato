@@ -34,7 +34,7 @@ public class InsertActionFilter(
 
         // Determine if this is anime (type may have been set at search time)
         var cfg = GelatoPlugin.Instance!.GetConfig(userId);
-        var isAnime = GelatoManager.IsAnime(stremioMeta, includeAnimationGenre: cfg.AnimeIncludesAnimation);
+        var isAnime = GelatoManager.IsAnime(stremioMeta, includeAnimationGenre: !string.IsNullOrEmpty(cfg.AnimePath));
 
         // Get root folder based on anime/series/movie
         Folder? root;
@@ -89,7 +89,7 @@ public class InsertActionFilter(
         }
 
         // Re-evaluate anime detection with full metadata genres as a fallback
-        if (!isAnime && GelatoManager.IsAnime(meta, includeAnimationGenre: cfg.AnimeIncludesAnimation))
+        if (!isAnime && GelatoManager.IsAnime(meta, includeAnimationGenre: !string.IsNullOrEmpty(cfg.AnimePath)))
         {
             isAnime = true;
             root = manager.TryGetAnimeFolder(userId) ?? manager.TryGetSeriesFolder(userId);
