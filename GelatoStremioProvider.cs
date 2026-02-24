@@ -16,6 +16,7 @@ public class GelatoStremioProvider(
     private StremioManifest? _manifest;
     private StremioCatalog? _movieSearchCatalog;
     private StremioCatalog? _seriesSearchCatalog;
+        public string? SeriesSearchCatalogId => _seriesSearchCatalog?.Id;
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
         PropertyNameCaseInsensitive = true,
