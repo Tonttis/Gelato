@@ -117,7 +117,7 @@ public class SearchActionFilter(
         PluginConfiguration cfg
     )
     {
-        var tasks = new List<Task<List<StremioMeta>>>();
+        var tasks = new List<Task<IReadOnlyList<StremioMeta>>>();
 
         if (requestedTypes.Contains(BaseItemKind.Movie) && cfg.MovieFolder is not null)
         {
