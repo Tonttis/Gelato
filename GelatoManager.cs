@@ -124,6 +124,29 @@ public sealed class GelatoManager(
         return TryGetFolder(cfg.SeriesPath);
     }
 
+    public Folder? TryGetAnimeFolder(Guid userId)
+    {
+        return TryGetFolder(
+            GelatoPlugin.Instance!.Configuration.GetEffectiveConfig(userId).AnimePath
+        );
+    }
+
+    public Folder? TryGetAnimeFolder(PluginConfiguration cfg)
+    {
+        return TryGetFolder(cfg.AnimePath);
+    }
+
+    public static bool IsAnime(StremioMeta meta, CatalogConfig? catalogCfg = null)
+    {
+        if (catalogCfg?.IsAnime == true) return true;
+        if (meta.Type == StremioMediaType.Anime) return true;
+        var animeIdPrefixes = new[] { "anidb:", "kitsu:", "mal:", "anilist:" };
+        if (animeIdPrefixes.Any(p => meta.Id.StartsWith(p, StringComparison.OrdinalIgnoreCase)))
+            return true;
+        var genres = meta.Genres ?? meta.Genre ?? [];
+        return genres.Any(g => string.Equals(g, "Anime", StringComparison.OrdinalIgnoreCase));
+    }
+
     private Folder? TryGetFolder(string path)
     {
         if (string.IsNullOrWhiteSpace(path))

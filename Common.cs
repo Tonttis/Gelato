@@ -217,6 +217,7 @@ public static class EnumMappingExtensions
         {
             StremioMediaType.Movie => BaseItemKind.Movie,
             StremioMediaType.Series => BaseItemKind.Series,
+            StremioMediaType.Anime => BaseItemKind.Series,
             _ => throw new ArgumentOutOfRangeException(
                 nameof(type),
                 type,

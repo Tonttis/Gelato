@@ -43,6 +43,7 @@ public class CatalogImportService(
         var stremio = cfg.Stremio;
         var seriesFolder = cfg.SeriesFolder;
         var movieFolder = cfg.MovieFolder;
+        var animeFolder = cfg.AnimeFolder;
 
         if (seriesFolder is null)
         {
@@ -105,12 +106,20 @@ public class CatalogImportService(
 
                     // catalog can contain multiple types.
 
-                    var root = baseItemKind switch
+                    Folder? root;
+                    if (GelatoManager.IsAnime(meta, catalogCfg))
                     {
-                        BaseItemKind.Series => seriesFolder,
-                        BaseItemKind.Movie => movieFolder,
-                        _ => null,
-                    };
+                        root = animeFolder ?? (baseItemKind == BaseItemKind.Movie ? movieFolder : seriesFolder);
+                    }
+                    else
+                    {
+                        root = baseItemKind switch
+                        {
+                            BaseItemKind.Series => seriesFolder,
+                            BaseItemKind.Movie => movieFolder,
+                            _ => null,
+                        };
+                    }
 
                     if (root is not null)
                     {

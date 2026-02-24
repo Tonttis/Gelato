@@ -35,57 +35,66 @@
 
           <!-- General Tab -->
           <div id="tab-general" class="tab-content" style="display: block;">
-            <h3 class="sectionTitle">General Settings</h3>
+              <h3 class="sectionTitle">General Settings</h3>
 
-            <div class="inputContainer">
-              <label class="inputLabel inputLabelUnfocused" for="txtUrl">AIOStreams URL (manifest or base):</label>
-              <input is="emby-input" type="text" id="txtUrl" required="required" class="emby-input" />
-              <div class="fieldDescription">Paste the manifest URL or base endpoint. <code>GetBaseUrl()</code> will
-                strip <code>/manifest.json</code> automatically.</div>
-            </div>
-
-            <div class="inputContainer">
-              <label class="inputLabel inputLabelUnfocused" for="txtMoviePath">Movies path:</label>
-              <input is="emby-input" type="text" id="txtMoviePath" class="emby-input" />
-              <div class="fieldDescription">Filesystem path for movie items. Use this path as library folder.</div>
-            </div>
-
-            <div class="inputContainer">
-              <label class="inputLabel inputLabelUnfocused" for="txtSeriesPath">Series path:</label>
-              <input is="emby-input" type="text" id="txtSeriesPath" class="emby-input" />
-              <div class="fieldDescription">Filesystem path for series items. Use this path as library folder.</div>
-            </div>
-       
-
-            <h3 class="sectionTitle" style="margin-top: 2em;">Search & Discovery</h3>
-
-            <div class="checkboxContainer checkboxContainer-withDescription">
-              <label>
-                <input is="emby-checkbox" type="checkbox" id="chkEnableMixed" />
-                <span>Show streams for local items</span>
-              </label>
-            </div>
-
-            <div class="checkboxContainer checkboxContainer-withDescription">
-              <label>
-                <input is="emby-checkbox" type="checkbox" id="chkDisableSearch" />
-                <span>Internal database search only (No remote requests)</span>
-              </label>
-            </div>
-
-            <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 0.5em;">
-              <label>
-                <input is="emby-checkbox" type="checkbox" id="chkFilterUnreleased" />
-                <span>Filter unreleased items</span>
-              </label>
-            </div>
-
-            <div class="inputContainer">
-              <label class="inputLabel inputLabelUnfocused" for="txtBufferDays">Release buffer days:</label>
-              <input is="emby-input" type="number" id="txtBufferDays" class="emby-input" />
-              <div class="fieldDescription">Items released within these many days will be hidden if filter is enabled.
+              <div class="inputContainer">
+                  <label class="inputLabel inputLabelUnfocused" for="txtUrl">AIOStreams URL (manifest or base):</label>
+                  <input is="emby-input" type="text" id="txtUrl" required="required" class="emby-input" />
+                  <div class="fieldDescription">
+                      Paste the manifest URL or base endpoint. <code>GetBaseUrl()</code> will
+                      strip <code>/manifest.json</code> automatically.
+                  </div>
               </div>
-            </div>
+
+              <div class="inputContainer">
+                  <label class="inputLabel inputLabelUnfocused" for="txtMoviePath">Movies path:</label>
+                  <input is="emby-input" type="text" id="txtMoviePath" class="emby-input" />
+                  <div class="fieldDescription">Filesystem path for movie items. Use this path as library folder.</div>
+              </div>
+
+              <div class="inputContainer">
+                  <label class="inputLabel inputLabelUnfocused" for="txtSeriesPath">Series path:</label>
+                  <input is="emby-input" type="text" id="txtSeriesPath" class="emby-input" />
+                  <div class="fieldDescription">Filesystem path for series items. Use this path as library folder.</div>
+              </div>
+
+              <div class="inputContainer">
+                  <label> class="inputLabel inputLabelUnfocused" for="txtAnimePath">Anime path:</label>
+                  <input is="emby-input" type="text" id="txtAnimePath" class="emby-input" />
+                  <div class="fieldDescription">Filesystem path for anime items. Add this path as a separate Jellyfin library.</div>
+              </div>
+
+
+              <h3 class="sectionTitle" style="margin-top: 2em;">Search & Discovery</h3>
+
+              <div class="checkboxContainer checkboxContainer-withDescription">
+                  <label>
+                      <input is="emby-checkbox" type="checkbox" id="chkEnableMixed" />
+                      <span>Show streams for local items</span>
+                  </label>
+              </div>
+
+              <div class="checkboxContainer checkboxContainer-withDescription">
+                  <label>
+                      <input is="emby-checkbox" type="checkbox" id="chkDisableSearch" />
+                      <span>Internal database search only (No remote requests)</span>
+                  </label>
+              </div>
+
+              <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 0.5em;">
+                  <label>
+                      <input is="emby-checkbox" type="checkbox" id="chkFilterUnreleased" />
+                      <span>Filter unreleased items</span>
+                  </label>
+              </div>
+
+              <div class="inputContainer">
+                  <label class="inputLabel inputLabelUnfocused" for="txtBufferDays">Release buffer days:</label>
+                  <input is="emby-input" type="number" id="txtBufferDays" class="emby-input" />
+                  <div class="fieldDescription">
+                      Items released within these many days will be hidden if filter is enabled.
+                  </div>
+              </div>
           </div>
 
           <!-- Catalogs Tab -->
@@ -256,6 +265,7 @@
         const txtUrl = page.querySelector('#txtUrl');
         const txtMoviePath = page.querySelector('#txtMoviePath');
         const txtSeriesPath = page.querySelector('#txtSeriesPath');
+        const txtAnimePath = page.querySelector('#txtAnimePath');
         const txtMaxCollectionItems = page.querySelector('#txtMaxCollectionItems');
 
         const txtStreamTTL = page.querySelector('#txtStreamTTL');
@@ -535,6 +545,7 @@
             if (txtUrl) txtUrl.value = cfg.Url || "";
             if (txtMoviePath) txtMoviePath.value = cfg.MoviePath || "";
             if (txtSeriesPath) txtSeriesPath.value = cfg.SeriesPath || "";
+            if (txtAnimePath) txtAnimePath.value = cfg.AnimePath || "";
             if (txtMaxCollectionItems) txtMaxCollectionItems.value = cfg.MaxCollectionItems || 100;
             if (txtStreamTTL) txtStreamTTL.value = cfg.StreamTTL || 3600;
             if (chkEnableMixed) chkEnableMixed.checked = cfg.EnableMixed ?? true;
@@ -563,6 +574,7 @@
             cfg.Url = txtUrl.value.trim();
             cfg.MoviePath = txtMoviePath.value.trim();
             cfg.SeriesPath = txtSeriesPath.value.trim();
+            cfg.AnimePath = txtAnimePath ? txtAnimePath.value.trim() : "";
 
             // Max collection items
             cfg.MaxCollectionItems = parseInt(txtMaxCollectionItems.value) || 100;
