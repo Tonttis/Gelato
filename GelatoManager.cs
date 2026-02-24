@@ -979,6 +979,7 @@ public sealed class GelatoManager(
 
         switch (meta.Type)
         {
+            case StremioMediaType.Anime:
             case StremioMediaType.Series:
                 item = new Series { };
                 break;
