@@ -5,8 +5,16 @@
     "guid": "94EA4E14-8163-4989-96FE-0A2094BC2D6A",
     "name": "Gelato",
     "overview": "Stream external media.",
-    "owner": "lstb1t",
+    "owner": "Tonttis",
     "versions": [
+      {
+        "changelog": "- fix: populate AnimeFolder in GetConfig so anime routes to correct library",
+        "checksum": "81cd26ef8949349c9b82fa14123332e2",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.5/gelato_0.26.5.5.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-02-24T16:53:08Z",
+        "version": "0.26.5.5"
+      },
       {
         "changelog": "- Fixed small typing mistake",
         "checksum": "c1f8e7ffec779e73d2bef2908c1a4663",
