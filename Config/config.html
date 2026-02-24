@@ -195,6 +195,11 @@
               <div class="inputContainer">
                 <label class="inputLabel" for="txtUserSeriesPath">Series path:</label>
                 <input is="emby-input" type="text" id="txtUserSeriesPath" class="emby-input" />
+                </div>
+
+              <div class="inputContainer">
+                <label class="inputLabel" for="txtUserAnimePath">Anime path:</label>
+                <input is="emby-input" type="text" id="txtUserAnimePath" class="emby-input" />
               </div>
 
               <div class="checkboxContainer">
@@ -289,10 +294,12 @@
         const txtUserUrl = page.querySelector('#txtUserUrl');
         const txtUserMoviePath = page.querySelector('#txtUserMoviePath');
         const txtUserSeriesPath = page.querySelector('#txtUserSeriesPath');
+        const txtUserAnimePath = page.querySelector('#txtUserAnimePath');
         const chkUserDisableSearch = page.querySelector('#chkUserDisableSearch');
 
         let currentConfig = null;
         let users = [];
+        
 
         async function loadCatalogs() {
           try {
@@ -608,6 +615,7 @@
               Url: override.Url,
               MoviePath: override.MoviePath,
               SeriesPath: override.SeriesPath,
+              AnimePath: override.AnimePath,
               DisableSearch: override.DisableSearch
             }));
 
@@ -623,6 +631,7 @@
                 Url: userConfig.Url,
                 MoviePath: userConfig.MoviePath,
                 SeriesPath: userConfig.SeriesPath,
+                AnimePath: userConfig.AnimePath,
                 DisableSearch: userConfig.DisableSearch
               };
             });
@@ -715,12 +724,15 @@
             txtUserUrl.value = override.Url || '';
             txtUserMoviePath.value = override.MoviePath || '';
             txtUserSeriesPath.value = override.SeriesPath || '';
+            txtUserAnimePath.value = override.AnimePath || '';
             chkUserDisableSearch.checked = override.DisableSearch || false;
           } else {
             // New
             txtUserUrl.value = currentConfig?.Url || '';
+            
             txtUserMoviePath.value = currentConfig?.MoviePath || '';
             txtUserSeriesPath.value = currentConfig?.SeriesPath || '';
+            txtUserAnimePath.value = currentConfig?.AnimePath || '';
             chkUserDisableSearch.checked = false;
           }
         }
@@ -739,6 +751,7 @@
             Url: txtUserUrl.value.trim(),
             MoviePath: txtUserMoviePath.value.trim(),
             SeriesPath: txtUserSeriesPath.value.trim(),
+            AnimePath: txtUserAnimePath.value.trim(),
             DisableSearch: chkUserDisableSearch.checked
           };
 
