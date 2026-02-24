@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## [0.26.5.10] - 2026-02-24\n\n### 🐛 Bug Fixes\n\n- Fallback to latest release upload_url for workflow_dispatch\n- Handle Anime type in IntoBaseItem, treat as Series\n",
+        "checksum": "75cedbf1309dd04a511c4c61421a001d",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.10/gelato_0.26.5.10.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-02-24T19:53:57Z",
+        "version": "0.26.5.10"
+      },
+      {
         "changelog": "## [0.26.5.9] - 2026-02-24\n\n### 🐛 Bug Fixes\n\n- Fix whitespace formatting in PluginConfiguration.cs\n- Fallback to github.token when RELEASE_TOKEN is not set\n- Fix release.yml YAML indentation and token fallback\n- Skip version commit if already up to date in make release\n\n### ⚙️ Miscellaneous Tasks\n\n- Bump version to 0.26.5.9\n",
         "checksum": "691779f52765be70dddc44fcf94e649e",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.9/gelato_0.26.5.9.zip",
