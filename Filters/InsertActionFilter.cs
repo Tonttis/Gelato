@@ -32,9 +32,11 @@ public class InsertActionFilter(
             return;
         }
 
-        // Get root folder - check anime first (using minimal meta), then series/movie
-        Folder? root;
+        // Determine if this is anime (type may have been set at search time)
         var isAnime = GelatoManager.IsAnime(stremioMeta);
+
+        // Get root folder based on anime/series/movie
+        Folder? root;
         if (isAnime)
         {
             root = manager.TryGetAnimeFolder(userId)
@@ -70,11 +72,12 @@ public class InsertActionFilter(
             }
         }
 
-        // Fetch full metadata
+        // Fetch full metadata - always use Series type for API call (Anime is not a valid Stremio type)
+        var fetchType = isAnime ? StremioMediaType.Series : stremioMeta.Type;
         var cfg = GelatoPlugin.Instance!.GetConfig(userId);
         var meta = await cfg.Stremio!.GetMetaAsync(
             stremioMeta.ImdbId ?? stremioMeta.Id,
-            stremioMeta.Type
+            fetchType
         );
         if (meta is null)
         {
@@ -87,16 +90,22 @@ public class InsertActionFilter(
             return;
         }
 
-        // Re-evaluate anime detection with full metadata (genres are now available)
+        // Re-evaluate anime detection with full metadata genres as a fallback
         if (!isAnime && GelatoManager.IsAnime(meta))
         {
             isAnime = true;
             root = manager.TryGetAnimeFolder(userId)
                 ?? manager.TryGetSeriesFolder(userId);
             log.LogInformation(
-                "Re-routed {Name} to anime folder based on full metadata",
+                "Re-routed {Name} to anime folder based on full metadata genres",
                 meta.Name ?? meta.Title
             );
+        }
+
+        // Preserve the anime type on the meta so InsertMeta handles it correctly
+        if (isAnime)
+        {
+            meta.Type = StremioMediaType.Anime;
         }
 
         // Insert the item
