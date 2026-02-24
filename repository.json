@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## [0.26.5.9] - 2026-02-24\n\n### 🐛 Bug Fixes\n\n- Fix whitespace formatting in PluginConfiguration.cs\n- Fallback to github.token when RELEASE_TOKEN is not set\n- Fix release.yml YAML indentation and token fallback\n- Skip version commit if already up to date in make release\n\n### ⚙️ Miscellaneous Tasks\n\n- Bump version to 0.26.5.9\n",
+        "checksum": "691779f52765be70dddc44fcf94e649e",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.9/gelato_0.26.5.9.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-02-24T19:29:17Z",
+        "version": "0.26.5.9"
+      },
+      {
         "changelog": "## fix: Anime routing via catalog IsAnime flag\r\n\r\n### Root Cause\r\nAnime was always routed to Shows because:\r\n1. Stremio search always returns `Type=Series` (not `Anime`)\r\n2. Full metadata from cinemeta doesn't include an `\"Anime\"` genre\r\n3. The `CatalogConfig.IsAnime` flag existed but was never connected to the search/insert flow\r\n\r\n### Fix\r\n- `GelatoStremioProvider`: expose `SeriesSearchCatalogId` property\r\n- `SearchActionFilter`: at search time, check if the Stremio search catalog matches any `IsAnime=true` catalog in config — if yes, override `meta.Type = Anime` before saving to cache\r\n- `InsertActionFilter`: normalize `Anime→Series` for the `GetMetaAsync` API call (Stremio has no anime endpoint), then restore `Anime` type for folder routing\r\n- `PluginConfiguration.ApplyOverrides`: copy `Catalogs` so per-user configs inherit catalog IsAnime flags\r\n\r\n### How to use\r\n1. In Gelato plugin settings → Catalog Config, find your series search catalog\r\n2. Enable **IsAnime** checkbox for that catalog\r\n3. Set **AnimePath** to your Jellyfin anime library path\r\n4. Anime searches will now route to the anime library",
         "checksum": "42f1804d87c66b25e9794f8a31a70f50",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.8/gelato_0.26.5.8.zip",
