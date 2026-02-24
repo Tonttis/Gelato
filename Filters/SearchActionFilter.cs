@@ -51,11 +51,10 @@ public class SearchActionFilter(
             return;
         }
 
-        ctx.TryGetActionArgument("startIndex", out var start, 0);
-        ctx.TryGetActionArgument("limit", out var limit, 25);
+        ctx.TryGetActionArgument<int>("startIndex", out var start, 0);
+        ctx.TryGetActionArgument<int>("limit", out var limit, 25);
 
         var metas = await SearchMetasAsync(searchTerm, requestedTypes, cfg);
-
         log.LogInformation(
             "Intercepted /Items search \"{Query}\" types=[{Types}] start={Start} limit={Limit} results={Results}",
             searchTerm,
@@ -65,11 +64,14 @@ public class SearchActionFilter(
             metas.Count
         );
 
-        var dtos = ConvertMetasToDtos(metas);
+        var dtos = ConvertMetasToDtos(metas, cfg);
         var paged = dtos.Skip(start).Take(limit).ToArray();
-
         ctx.Result = new OkObjectResult(
-            new QueryResult<BaseItemDto> { Items = paged, TotalRecordCount = dtos.Count }
+            new QueryResult<BaseItemDto>
+            {
+                Items = paged,
+                TotalRecordCount = dtos.Count
+            }
         );
     }
 
@@ -115,7 +117,7 @@ public class SearchActionFilter(
         PluginConfiguration cfg
     )
     {
-        var tasks = new List<Task<IReadOnlyList<StremioMeta>>>();
+        var tasks = new List<Task<List<StremioMeta>>>();
 
         if (requestedTypes.Contains(BaseItemKind.Movie) && cfg.MovieFolder is not null)
         {
@@ -143,7 +145,6 @@ public class SearchActionFilter(
 
         var filterUnreleased = cfg.FilterUnreleased;
         var bufferDays = cfg.FilterUnreleasedBufferDays;
-
         if (filterUnreleased)
         {
             results = results
@@ -154,16 +155,29 @@ public class SearchActionFilter(
         return results;
     }
 
-    private List<BaseItemDto> ConvertMetasToDtos(List<StremioMeta> metas)
+    private List<BaseItemDto> ConvertMetasToDtos(List<StremioMeta> metas, PluginConfiguration cfg)
     {
+        // Determine if the Stremio series search catalog is flagged as anime
+        var seriesSearchCatalogId = cfg.Stremio?.SeriesSearchCatalogId;
+        var seriesSearchIsAnime =
+            seriesSearchCatalogId is not null
+            && cfg.Catalogs.Any(c =>
+                string.Equals(c.Id, seriesSearchCatalogId, StringComparison.OrdinalIgnoreCase)
+                && c.IsAnime
+            );
+
         // theres a reason i initally disabled all fields but forgot....
         // infuse breaks if we do a small subset. Not sure which field it needs. Prolly mediasources
         var options = new DtoOptions { EnableImages = true, EnableUserData = false };
-
         var dtos = new List<BaseItemDto>(metas.Count);
-
         foreach (var meta in metas)
         {
+            // If the search catalog is marked IsAnime, override the type so routing works
+            if (seriesSearchIsAnime && meta.Type == StremioMediaType.Series)
+            {
+                meta.Type = StremioMediaType.Anime;
+            }
+
             var baseItem = manager.IntoBaseItem(meta);
             if (baseItem is null)
                 continue;
@@ -172,10 +186,8 @@ public class SearchActionFilter(
             var stremioUri = StremioUri.FromBaseItem(baseItem);
             dto.Id = stremioUri.ToGuid();
             dtos.Add(dto);
-
             manager.SaveStremioMeta(dto.Id, meta);
         }
-
         return dtos;
     }
 }
