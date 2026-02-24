@@ -26,6 +26,7 @@ public class PluginConfiguration : BasePluginConfiguration
     public bool CreateCollections { get; set; } = false;
     public int MaxCollectionItems { get; set; } = 100;
     public bool DisableSearch { get; set; } = false;
+    public bool AnimeIncludesAnimation { get; set; } = false;
 
     public List<CatalogConfig> Catalogs { get; set; } = [];
     public List<UserConfig> UserConfigs { get; set; } = [];
@@ -106,6 +107,7 @@ public class UserConfig
             MaxCollectionItems = baseConfig.MaxCollectionItems,
             Catalogs = baseConfig.Catalogs,
             UserConfigs = baseConfig.UserConfigs,
+                AnimeIncludesAnimation = baseConfig.AnimeIncludesAnimation,
         };
     }
 }
