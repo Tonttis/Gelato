@@ -33,21 +33,19 @@ public class InsertActionFilter(
         }
 
         // Determine if this is anime (type may have been set at search time)
-        var isAnime = GelatoManager.IsAnime(stremioMeta);
+        var cfg = GelatoPlugin.Instance!.GetConfig(userId);
+        var isAnime = GelatoManager.IsAnime(stremioMeta, includeAnimationGenre: cfg.AnimeIncludesAnimation);
 
         // Get root folder based on anime/series/movie
         Folder? root;
         if (isAnime)
         {
-            root = manager.TryGetAnimeFolder(userId)
-                ?? manager.TryGetSeriesFolder(userId);
+            root = manager.TryGetAnimeFolder(userId) ?? manager.TryGetSeriesFolder(userId);
         }
         else
         {
             var isSeries = stremioMeta.Type == StremioMediaType.Series;
-            root = isSeries
-                ? manager.TryGetSeriesFolder(userId)
-                : manager.TryGetMovieFolder(userId);
+            root = isSeries ? manager.TryGetSeriesFolder(userId) : manager.TryGetMovieFolder(userId);
         }
 
         if (root is null)
@@ -74,11 +72,11 @@ public class InsertActionFilter(
 
         // Fetch full metadata - always use Series type for API call (Anime is not a valid Stremio type)
         var fetchType = isAnime ? StremioMediaType.Series : stremioMeta.Type;
-        var cfg = GelatoPlugin.Instance!.GetConfig(userId);
         var meta = await cfg.Stremio!.GetMetaAsync(
             stremioMeta.ImdbId ?? stremioMeta.Id,
             fetchType
         );
+
         if (meta is null)
         {
             log.LogError(
@@ -91,11 +89,10 @@ public class InsertActionFilter(
         }
 
         // Re-evaluate anime detection with full metadata genres as a fallback
-        if (!isAnime && GelatoManager.IsAnime(meta))
+        if (!isAnime && GelatoManager.IsAnime(meta, includeAnimationGenre: cfg.AnimeIncludesAnimation))
         {
             isAnime = true;
-            root = manager.TryGetAnimeFolder(userId)
-                ?? manager.TryGetSeriesFolder(userId);
+            root = manager.TryGetAnimeFolder(userId) ?? manager.TryGetSeriesFolder(userId);
             log.LogInformation(
                 "Re-routed {Name} to anime folder based on full metadata genres",
                 meta.Name ?? meta.Title
