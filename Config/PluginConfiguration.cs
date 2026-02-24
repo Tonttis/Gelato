@@ -10,7 +10,7 @@ public class PluginConfiguration : BasePluginConfiguration
 {
     public string MoviePath { get; set; } = Path.Combine(Path.GetTempPath(), "gelato", "movies");
     public string SeriesPath { get; set; } = Path.Combine(Path.GetTempPath(), "gelato", "series");
-    public string AnimePath { get; set; } = "";
+    public string AnimePath { get; set; } = Path.Combine(Path.GetTempPath(), "gelato", "anime");
     public int StreamTTL { get; set; } = 3600;
     public int CatalogMaxItems { get; set; } = 100;
     public string Url { get; set; } = "";
