@@ -32,9 +32,10 @@ public class InsertActionFilter(
             return;
         }
 
-        // Get root folder - check anime first, then series/movie
+        // Get root folder - check anime first (using minimal meta), then series/movie
         Folder? root;
-        if (GelatoManager.IsAnime(stremioMeta))
+        var isAnime = GelatoManager.IsAnime(stremioMeta);
+        if (isAnime)
         {
             root = manager.TryGetAnimeFolder(userId)
                 ?? manager.TryGetSeriesFolder(userId);
@@ -84,6 +85,18 @@ public class InsertActionFilter(
             );
             await next();
             return;
+        }
+
+        // Re-evaluate anime detection with full metadata (genres are now available)
+        if (!isAnime && GelatoManager.IsAnime(meta))
+        {
+            isAnime = true;
+            root = manager.TryGetAnimeFolder(userId)
+                ?? manager.TryGetSeriesFolder(userId);
+            log.LogInformation(
+                "Re-routed {Name} to anime folder based on full metadata",
+                meta.Name ?? meta.Title
+            );
         }
 
         // Insert the item
