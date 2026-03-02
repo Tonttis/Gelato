@@ -24,7 +24,7 @@ namespace Gelato.Providers
 
         private static readonly TimeSpan CacheTtl = TimeSpan.FromHours(1);
 
-        // Static so the cache is shared across all instances — Jellyfin may create
+        // Static so the cache is shared across all instances - Jellyfin may create
         // provider instances via its own assembly scanning, separate from the DI container.
         private static readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
 
@@ -66,12 +66,9 @@ namespace Gelato.Providers
 
             var cfg = GelatoPlugin.Instance!.GetConfig(Guid.Empty);
             var subs = await cfg.Stremio!.GetSubtitlesAsync(id, mediaType).ConfigureAwait(false);
-
             _cache.Set(listKey, (IReadOnlyList<StremioSubtitle>)subs, CacheTtl);
-
             foreach (var s in subs)
                 _cache.Set(SubCacheKey(s.Id), s, CacheTtl);
-
             return subs;
         }
 
@@ -106,6 +103,16 @@ namespace Gelato.Providers
                     return Array.Empty<RemoteSubtitleInfo>();
                 }
 
+                var imdbId = request.GetProviderId("ImdbId");
+
+                if (imdbId != null)
+                {
+                    stremioId =
+                        request.ContentType == VideoContentType.Episode
+                            ? $"{imdbId}:{request.ParentIndexNumber}:{request.IndexNumber}"
+                            : imdbId;
+                }
+
                 var mediaType =
                     request.ContentType == VideoContentType.Episode
                         ? StremioMediaType.Series
@@ -121,7 +128,6 @@ namespace Gelato.Providers
             }
 
             var lang = (request.TwoLetterISOLanguageName ?? "").Trim().ToLower();
-
             var filtered = (
                 string.IsNullOrEmpty(lang)
                     ? subs
@@ -171,7 +177,7 @@ namespace Gelato.Providers
 
             foreach (var (s, titleScore, bonus, score) in scored)
                 _log.LogDebug(
-                    "  [{Score:F2}] title={TitleScore:F2} bonus={Bonus:F2} trusted={Trusted} ai={Ai} '{Title}'",
+                    " [{Score:F2}] title={TitleScore:F2} bonus={Bonus:F2} trusted={Trusted} ai={Ai} '{Title}'",
                     score,
                     titleScore,
                     bonus,
@@ -225,6 +231,7 @@ namespace Gelato.Providers
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken
             );
+
             if (!resp.IsSuccessStatusCode)
             {
                 _log.LogError(
@@ -253,37 +260,23 @@ namespace Gelato.Providers
 
         public string GuessSubtitleCodec(string? urlOrPath)
         {
-            if (string.IsNullOrWhiteSpace(urlOrPath))
-                return "subrip";
-
+            if (string.IsNullOrWhiteSpace(urlOrPath)) return "subrip";
             var s = urlOrPath.ToLowerInvariant();
-
-            if (s.Contains(".vtt"))
-                return "vtt";
-            if (s.Contains(".srt"))
-                return "srt";
-            if (s.Contains(".ass") || s.Contains(".ssa"))
-                return "ass";
-            if (s.Contains(".subf2m"))
-                return "subrip";
-            if (s.Contains("subs") && s.Contains(".strem.io"))
-                return "srt"; // Stremio proxies are always normalized to .srt
-
+            if (s.Contains(".vtt")) return "vtt";
+            if (s.Contains(".srt")) return "srt";
+            if (s.Contains(".ass") || s.Contains(".ssa")) return "ass";
+            if (s.Contains(".subf2m")) return "subrip";
+            if (s.Contains("subs") && s.Contains(".strem.io")) return "srt"; // Stremio proxies are always normalized to .srt
             _log.LogWarning("unkown subtitle format for {Path}, defaulting to srt", s);
             return "srt";
         }
 
         private static double TitleMatchScore(string releaseName, string? title)
         {
-            if (string.IsNullOrWhiteSpace(title))
-                return 0;
-
+            if (string.IsNullOrWhiteSpace(title)) return 0;
             var a = TokenizeReleaseName(releaseName);
             var b = TokenizeReleaseName(title);
-
-            if (a.Count == 0 || b.Count == 0)
-                return 0;
-
+            if (a.Count == 0 || b.Count == 0) return 0;
             var intersection = a.Intersect(b, StringComparer.OrdinalIgnoreCase).Count();
             var union = a.Union(b, StringComparer.OrdinalIgnoreCase).Count();
             return union == 0 ? 0 : (double)intersection / union;
@@ -291,11 +284,11 @@ namespace Gelato.Providers
 
         private static HashSet<string> TokenizeReleaseName(string s) =>
             s.Split(
-                    new[] { '.', '-', '_', ' ', '(', ')', '[', ']' },
-                    StringSplitOptions.RemoveEmptyEntries
-                )
-                .Select(t => t.ToLowerInvariant())
-                .ToHashSet();
+                new[] { '.', '-', '_', ' ', '(', ')', '[', ']' },
+                StringSplitOptions.RemoveEmptyEntries
+            )
+            .Select(t => t.ToLowerInvariant())
+            .ToHashSet();
 
         private static string ListCacheKey(string id, StremioMediaType mediaType) =>
             $"gelato:subtitles:{mediaType.ToString().ToLower()}/{id}";
