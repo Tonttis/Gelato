@@ -10,6 +10,7 @@ namespace Gelato.Decorators;
 
 public sealed class DtoServiceDecorator(IDtoService inner)
     : IDtoService
+    {
 
     
 
