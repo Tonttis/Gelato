@@ -294,7 +294,7 @@ public class StremioCatalog
             // should not have required extras
         public bool IsImportable()
         {
-            return !Extra.Any(e => e.IsRequired == true);
+        return true;
         }
 }
 
