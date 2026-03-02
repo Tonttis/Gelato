@@ -49,33 +49,33 @@ public sealed class StremioUri
         switch (kind)
         {
             case BaseItemKind.Movie:
-                {
-                    var imdb = item.GetProviderId(MetadataProvider.Imdb);
-                    return string.IsNullOrWhiteSpace(imdb)
-                        ? uri
-                        : new StremioUri(StremioMediaType.Movie, imdb);
-                }
+            {
+                var imdb = item.GetProviderId(MetadataProvider.Imdb);
+                return string.IsNullOrWhiteSpace(imdb)
+                    ? uri
+                    : new StremioUri(StremioMediaType.Movie, imdb);
+            }
             case BaseItemKind.Series:
-                {
-                    var imdb = item.GetProviderId(MetadataProvider.Imdb);
-                    return string.IsNullOrWhiteSpace(imdb)
-                        ? uri
-                        : new StremioUri(StremioMediaType.Series, imdb);
-                }
+            {
+                var imdb = item.GetProviderId(MetadataProvider.Imdb);
+                return string.IsNullOrWhiteSpace(imdb)
+                    ? uri
+                    : new StremioUri(StremioMediaType.Series, imdb);
+            }
             case BaseItemKind.Episode:
-                {
-                    var ep = (Episode)item;
-                    var seriesImdb = ep.Series?.GetProviderId(MetadataProvider.Imdb);
-                    if (
-                        string.IsNullOrWhiteSpace(seriesImdb)
-                        || ep.ParentIndexNumber is null
-                        || ep.IndexNumber is null
-                    )
-                        return uri;
+            {
+                var ep = (Episode)item;
+                var seriesImdb = ep.Series?.GetProviderId(MetadataProvider.Imdb);
+                if (
+                    string.IsNullOrWhiteSpace(seriesImdb)
+                    || ep.ParentIndexNumber is null
+                    || ep.IndexNumber is null
+                )
+                    return uri;
 
-                    var ext = $"{seriesImdb}:{ep.ParentIndexNumber}:{ep.IndexNumber}";
-                    return new StremioUri(StremioMediaType.Series, ext);
-                }
+                var ext = $"{seriesImdb}:{ep.ParentIndexNumber}:{ep.IndexNumber}";
+                return new StremioUri(StremioMediaType.Series, ext);
+            }
         }
 
         return null;
@@ -119,6 +119,7 @@ public static class Utils
         {
             // ignore
         }
+
         // Regex fallback for human formats like "2h29min"
         var h = Regex.Match(input, @"(\d+)\s*h");
         var m = Regex.Match(input, @"(\d+)\s*min");
@@ -128,7 +129,7 @@ public static class Utils
         var mins = m.Success ? int.Parse(m.Groups[1].Value) : 0;
         var secs = s.Success ? int.Parse(s.Groups[1].Value) : 0;
 
-        // If plain number like "149" → minutes
+        // If plain number like "149" -> minutes
         if (!h.Success && !m.Success && !s.Success && int.TryParse(input, out var onlyNum))
             mins = onlyNum;
 
@@ -205,8 +206,7 @@ public static class EnumMappingExtensions
         return kind switch
         {
             BaseItemKind.Movie => StremioMediaType.Movie,
-            BaseItemKind.Series or BaseItemKind.Season or BaseItemKind.Episode =>
-                StremioMediaType.Series,
+            BaseItemKind.Series or BaseItemKind.Season or BaseItemKind.Episode => StremioMediaType.Series,
             _ => StremioMediaType.Unknown,
         };
     }
@@ -305,7 +305,8 @@ public static class ActionContextExtensions
     }
 
     public static bool IsApiSearchAction(this ActionExecutingContext ctx) =>
-        ctx.GetActionName() is { } actionName && SearchActionNames.Contains(actionName);
+        ctx.GetActionName() is { } actionName
+        && SearchActionNames.Contains(actionName);
 
     public static bool IsInsertableAction(this HttpContext ctx)
     {
@@ -314,14 +315,15 @@ public static class ActionContextExtensions
             && InsertableActionNames.Contains(actionName)
             && (
                 !InsertableListActionNames.Contains(actionName)
-                || InsertableListActionNames.Contains(actionName) && IsSingleItemList(ctx)
+                || InsertableListActionNames.Contains(actionName)
+                    && ctx.IsSingleItemList()
             );
     }
 
     public static bool IsInsertableAction(this ActionExecutingContext ctx) =>
         ctx.HttpContext.IsInsertableAction();
 
-    private static bool IsSingleItemList(HttpContext ctx)
+    public static bool IsSingleItemList(this HttpContext ctx)
     {
         var q = ctx.Request.Query;
         if (!q.TryGetValue("ids", out var idsRaw))
@@ -332,13 +334,17 @@ public static class ActionContextExtensions
                 v.ToString()
                     .Split(
                         ',',
-                        StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
+                        StringSplitOptions.RemoveEmptyEntries
+                            | StringSplitOptions.TrimEntries
                     )
             )
             .ToArray();
 
         return ids.Length == 1;
     }
+
+    public static bool IsSingleItemList(this ActionExecutingContext ctx) =>
+        ctx.HttpContext.IsSingleItemList();
 
     public static bool TryGetRouteGuid(this ActionExecutingContext ctx, out Guid value)
     {
@@ -391,7 +397,6 @@ public static class ActionContextExtensions
     public static void ReplaceGuid(this ActionExecutingContext ctx, Guid value)
     {
         var rd = ctx.RouteData.Values;
-
         foreach (var key in RouteGuidKeys)
         {
             if (rd.TryGetValue(key, out var raw) && raw is not null)
@@ -400,7 +405,6 @@ public static class ActionContextExtensions
                 ctx.ActionArguments[key] = value;
             }
         }
-
         ctx.HttpContext.Items["GuidResolved"] = value;
     }
 
@@ -412,7 +416,6 @@ public static class ActionContextExtensions
     public static bool TryGetUserId(this HttpContext ctx, out Guid userId)
     {
         userId = Guid.Empty;
-
         var userIdStr =
             ctx.User.Claims.FirstOrDefault(c => c.Type is "UserId" or "Jellyfin-UserId")?.Value
             ?? ctx.Request.Query["userId"].FirstOrDefault();
@@ -463,8 +466,7 @@ public static class BaseItemExtensions
 
     public static bool IsStream(this BaseItem item)
     {
-        return !string.IsNullOrWhiteSpace(item.GetProviderId("Stremio"))
-            && !item.IsPrimaryVersion();
+        return !string.IsNullOrWhiteSpace(item.GetProviderId("Stremio")) && !item.IsPrimaryVersion();
     }
 
     public static T? GelatoData<T>(this BaseItem item, string key)
@@ -475,9 +477,7 @@ public static class BaseItemExtensions
         try
         {
             var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(item.ExternalId);
-            return dict != null && dict.TryGetValue(key, out var el)
-                ? el.Deserialize<T>()
-                : default;
+            return dict != null && dict.TryGetValue(key, out var el) ? el.Deserialize<T>() : default;
         }
         catch
         {
@@ -488,13 +488,12 @@ public static class BaseItemExtensions
     public static void SetGelatoData<T>(this BaseItem item, string key, T value)
     {
         Dictionary<string, JsonElement> data;
-
         try
         {
             data = string.IsNullOrEmpty(item.ExternalId)
                 ? new Dictionary<string, JsonElement>()
                 : JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(item.ExternalId)
-                ?? new Dictionary<string, JsonElement>();
+                    ?? new Dictionary<string, JsonElement>();
         }
         catch
         {
