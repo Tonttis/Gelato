@@ -77,11 +77,6 @@ public sealed class DtoServiceDecorator(IDtoService inner)
 
     private void Patch(BaseItemDto dto, BaseItem? item, bool isList, User? user)
     {
-        var manager = _manager.Value;
-        if (item is not null && user is not null && IsGelato(dto) && manager.CanDelete(item, user))
-        {
-            dto.CanDelete = true;
-        }
         if (IsGelato(dto))
         {
             dto.CanDownload = true;
