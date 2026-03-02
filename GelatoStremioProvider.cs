@@ -292,6 +292,12 @@ public class StremioCatalog
     }
 }
 
+    // should not have required extras
+    public bool IsImportable()
+    {
+        return !Extra.Any(e => e.IsRequired == true);
+    }
+
 public class StremioExtra
 {
     public string Name { get; set; } = "";
@@ -325,6 +331,33 @@ public struct StremioSubtitle
     public string? LangCode { get; set; }
     public string? Title { get; set; }
     public string? Moviehash { get; set; }
+    
+    public string? TwoLetterISOLanguageName()
+    {
+        var lng = Lang ?? LangCode;
+        if (!string.IsNullOrWhiteSpace(lng))
+        {
+            // If the input is 3 characters, try to convert it to a 2-letter ISO code
+            if (lng.Length == 3)
+            {
+                try
+                {
+                    CultureInfo culture = CultureInfo.GetCultureInfoByIetfLanguageTag(
+                        lng.ToLower()
+                    );
+                    lng = culture.TwoLetterISOLanguageName;
+                }
+                catch (CultureNotFoundException)
+                {
+                    // If the 3-letter code is invalid, return null or handle as needed
+                    return null;
+                }
+            }
+            return lng.ToLower();
+        }
+
+        return null;
+    }
 }
 
 public struct StremioSubtitleResponse
@@ -347,7 +380,7 @@ public class StremioMeta
     public string? Title { get; set; }
     public string? Poster { get; set; }
     public List<string>? Genres { get; set; }
-    public string? ImdbRating { get; set; }
+    // sometimes string, sometimes number... disable for now     // public string? ImdbRating { get; set; }
     public string? ReleaseInfo { get; set; }
     public string? Description { get; set; }
     public string? Overview { get; set; }
