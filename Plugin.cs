@@ -46,7 +46,7 @@ public class GelatoPlugin : BasePlugin<PluginConfiguration>, IHasWebPages
         var prefix = GetType().Namespace;
         yield return new PluginPageInfo
         {
-            Name = "config",
+            Name = "config",                     EnableInMainMenu = true,
             EmbeddedResourcePath = prefix + ".Config.config.html",
         };
     }
