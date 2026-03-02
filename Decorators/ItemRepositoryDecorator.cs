@@ -1,6 +1,5 @@
 #nullable disable
 #pragma warning disable CS1591
-
 using Jellyfin.Data.Enums;
 using Jellyfin.Database.Implementations.Entities;
 using MediaBrowser.Controller.Entities;
@@ -15,8 +14,7 @@ namespace Gelato.Decorators;
 public sealed class GelatoItemRepository(IItemRepository inner, IHttpContextAccessor http)
     : IItemRepository
 {
-    private readonly IHttpContextAccessor _http =
-        http ?? throw new ArgumentNullException(nameof(http));
+    private readonly IHttpContextAccessor _http = http ?? throw new ArgumentNullException(nameof(http));
 
     public void DeleteItem(params IReadOnlyList<Guid> ids) => inner.DeleteItem(ids);
 
@@ -46,7 +44,7 @@ public sealed class GelatoItemRepository(IItemRepository inner, IHttpContextAcce
         var filterUnreleased = GelatoPlugin.Instance!.Configuration.FilterUnreleased;
         var bufferDays = GelatoPlugin.Instance.Configuration.FilterUnreleasedBufferDays;
 
-        if (ctx is not null && ctx.IsApiListing() && filter.IsDeadPerson is null)
+        if (ctx is not null && !ctx.IsSingleItemList() && filter.IsDeadPerson is null)
         {
             filter.IsDeadPerson = null;
             if (
@@ -58,6 +56,7 @@ public sealed class GelatoItemRepository(IItemRepository inner, IHttpContextAcce
                     .Any()
             )
                 return filter;
+
             if (filter.ExcludeTags.Length == 0)
             {
                 filter.ExcludeTags = [GelatoManager.StreamTag];
@@ -78,11 +77,7 @@ public sealed class GelatoItemRepository(IItemRepository inner, IHttpContextAcce
         {
             filter.IsDeadPerson = null;
         }
-        else if (filter.IsMissing == true)
-        {
-            // jf deletes virtual items when theres a valid primary version. So just dont return it
-            filter.ExcludeTags = [GelatoManager.StreamTag];
-        }
+
         return filter;
     }
 
@@ -139,7 +134,7 @@ public sealed class GelatoItemRepository(IItemRepository inner, IHttpContextAcce
     public bool GetIsPlayed(User user, Guid id, bool recursive) =>
         inner.GetIsPlayed(user, id, recursive);
 
-    public IReadOnlyDictionary<string, MusicArtist[]> FindArtists(
+    public IReadOnlyDictionary<string, Guid> FindArtists(
         IReadOnlyList<string> artistNames
     ) => inner.FindArtists(artistNames);
 
