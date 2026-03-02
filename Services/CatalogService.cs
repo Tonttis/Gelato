@@ -20,7 +20,7 @@ public class CatalogService(GelatoStremioProviderFactory stremioFactory)
         // Merge manifest catalogs with local config
         foreach (var mCatalog in manifest.Catalogs)
         {
-            if (mCatalog.IsSearchCapable())
+            if (!mCatalog.IsImportable())
                 continue; // Skip search catalogs
 
             var existing = config.Catalogs.FirstOrDefault(c =>
