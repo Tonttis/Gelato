@@ -8,7 +8,15 @@
     "owner": "Tonttis",
     "versions": [
       {
-        "changelog": "## [0.26.6.0] - 2026-03-02\n\n### 🚀 Features\n\n- Add settings to main menu (EnableInMainMenu)\n\n### 🐛 Bug Fixes\n\n- Move IsImportable() inside StremioCatalog class\n- Remove IAuthorizationContext from DtoServiceDecorator\n- Correct FindArtists return type to MusicArtist[]\n- Add missing opening brace in DtoServiceDecorator\n- Remove _manager usage from Patch method\n- Remove duplicate Where clauses in MediaSourceManagerDecorator\n\n### 💼 Other\n\n- Sync upstream changes to Common.cs (IsSingleItemList as public extension)\n- Sync DtoServiceDecorator - add CanDelete/CanDownload, IAuthorizationContext\n- Sync ItemRepositoryDecorator - IsSingleItemList, remove IsMissing block\n- Fix NullReferenceException in MediaSourceManager path checks\n- Add IsImportable(), TwoLetterISOLanguageName(), disable ImdbRating\n- Use IsImportable() instead of IsSearchCapable() in CatalogService\n",
+        "changelog": "## [0.26.6.1] - 2026-03-02\n\n### 🐛 Bug Fixes\n\n- Make IsImportable() always return true to fix streaming\n\n### ⚙️ Miscellaneous Tasks\n\n- *(release)* Bump version to v0.26.6.1\n",
+        "checksum": "a7010357ccc3553e5b96757dd77453bd",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.6.1/gelato_0.26.6.1.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-03-02T13:49:09Z",
+        "version": "0.26.6.1"
+      },
+      {
+        "changelog": "## [0.26.6.0] - 2026-03-02\r\n\r\n### 🚀 Features\r\n\r\n- Add settings to main menu (EnableInMainMenu)\r\n\r\n### 🐛 Bug Fixes\r\n\r\n- Move IsImportable() inside StremioCatalog class\r\n- Remove IAuthorizationContext from DtoServiceDecorator\r\n- Correct FindArtists return type to MusicArtist[]\r\n- Add missing opening brace in DtoServiceDecorator\r\n- Remove _manager usage from Patch method\r\n- Remove duplicate Where clauses in MediaSourceManagerDecorator\r\n\r\n### 💼 Other\r\n\r\n- Sync upstream changes to Common.cs (IsSingleItemList as public extension)\r\n- Sync DtoServiceDecorator - add CanDelete/CanDownload, IAuthorizationContext\r\n- Sync ItemRepositoryDecorator - IsSingleItemList, remove IsMissing block\r\n- Fix NullReferenceException in MediaSourceManager path checks\r\n- Add IsImportable(), TwoLetterISOLanguageName(), disable ImdbRating\r\n- Use IsImportable() instead of IsSearchCapable() in CatalogService\r\n",
         "checksum": "1a7f2b8268383b4412b6e8799c75638f",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.6.0/gelato_0.26.6.0.zip",
         "targetAbi": "10.11.6.0",
