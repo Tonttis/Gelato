@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## [0.26.6.0] - 2026-03-02\n\n### 🚀 Features\n\n- Add settings to main menu (EnableInMainMenu)\n\n### 🐛 Bug Fixes\n\n- Move IsImportable() inside StremioCatalog class\n- Remove IAuthorizationContext from DtoServiceDecorator\n- Correct FindArtists return type to MusicArtist[]\n- Add missing opening brace in DtoServiceDecorator\n- Remove _manager usage from Patch method\n- Remove duplicate Where clauses in MediaSourceManagerDecorator\n\n### 💼 Other\n\n- Sync upstream changes to Common.cs (IsSingleItemList as public extension)\n- Sync DtoServiceDecorator - add CanDelete/CanDownload, IAuthorizationContext\n- Sync ItemRepositoryDecorator - IsSingleItemList, remove IsMissing block\n- Fix NullReferenceException in MediaSourceManager path checks\n- Add IsImportable(), TwoLetterISOLanguageName(), disable ImdbRating\n- Use IsImportable() instead of IsSearchCapable() in CatalogService\n",
+        "checksum": "1a7f2b8268383b4412b6e8799c75638f",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.6.0/gelato_0.26.6.0.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-03-02T13:07:20Z",
+        "version": "0.26.6.0"
+      },
+      {
         "changelog": "## [0.26.5.10] - 2026-02-24\n\n### 🐛 Bug Fixes\n\n- Fallback to latest release upload_url for workflow_dispatch\n- Handle Anime type in IntoBaseItem, treat as Series\n",
         "checksum": "75cedbf1309dd04a511c4c61421a001d",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.5.10/gelato_0.26.5.10.zip",
