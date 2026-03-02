@@ -134,8 +134,7 @@ public sealed class GelatoItemRepository(IItemRepository inner, IHttpContextAcce
     public bool GetIsPlayed(User user, Guid id, bool recursive) =>
         inner.GetIsPlayed(user, id, recursive);
 
-    public IReadOnlyDictionary<string, Guid> FindArtists(
-        IReadOnlyList<string> artistNames
+    public IReadOnlyDictionary<string, MusicArtist[]> FindArtists(        IReadOnlyList<string> artistNames
     ) => inner.FindArtists(artistNames);
 
     public Task ReattachUserDataAsync(BaseItem item, CancellationToken cancellationToken) =>
