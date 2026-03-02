@@ -8,10 +8,10 @@ using MediaBrowser.Model.Entities;
 
 namespace Gelato.Decorators;
 
-public sealed class DtoServiceDecorator(IDtoService inner, Lazy<IAuthorizationContext> manager)
+public sealed class DtoServiceDecorator(IDtoService inner)
     : IDtoService
-{
-    private readonly Lazy<IAuthorizationContext> _manager = manager;
+
+    
 
     public double? GetPrimaryImageAspectRatio(BaseItem item) =>
         inner.GetPrimaryImageAspectRatio(item);
