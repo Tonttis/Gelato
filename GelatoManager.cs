@@ -673,6 +673,7 @@ public sealed class GelatoManager(
                     seriesMeta.Name
                 );
             }
+                    }
         
         var seasonGroups = (episodeVideos ?? Enumerable.Empty<StremioMeta>())
         
