@@ -645,7 +645,7 @@ public sealed class GelatoManager(
 
                 // Handle case where metadata has no Videos (e.g., anime from search)
         // Create a minimal single-episode entry using seriesMeta.Id format (kitsu:12345:1:1)
-        List<StremioMeta>? episodeVideos = episodeVideos;
+                List<StremioMeta>? episodeVideos = seriesMeta.Videos;
         if (episodeVideos is null || episodeVideos.Count == 0)
         {
             // Try to extract episode info from the series ID if it's in episode format
