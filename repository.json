@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## [0.26.6.2] - 2026-03-03\n\n### 🐛 Bug Fixes\n\n- Continue with original meta when GetMetaAsync returns null for anime\n\n### ⚙️ Miscellaneous Tasks\n\n- *(release)* Bump version to v0.26.6.2\n",
+        "checksum": "3a596ed0394a598cadc902ce8d1dd2c3",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.6.2/gelato_0.26.6.2.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-03-03T02:43:27Z",
+        "version": "0.26.6.2"
+      },
+      {
         "changelog": "## [0.26.6.1] - 2026-03-02\n\n### 🐛 Bug Fixes\n\n- Make IsImportable() always return true to fix streaming\n\n### ⚙️ Miscellaneous Tasks\n\n- *(release)* Bump version to v0.26.6.1\n",
         "checksum": "a7010357ccc3553e5b96757dd77453bd",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.6.1/gelato_0.26.6.1.zip",
