@@ -642,7 +642,40 @@ public sealed class GelatoManager(
         }
         var stopwatch = Stopwatch.StartNew();
         // Group episodes by season
-        var seasonGroups = (seriesMeta.Videos ?? Enumerable.Empty<StremioMeta>())
+
+                // Handle case where metadata has no Videos (e.g., anime from search)
+        // Create a minimal single-episode entry using seriesMeta.Id format (kitsu:12345:1:1)
+        List<StremioMeta>? episodeVideos = episodeVideos;
+        if (episodeVideos is null || episodeVideos.Count == 0)
+        {
+            // Try to extract episode info from the series ID if it's in episode format
+            var idParts = seriesMeta.Id.Split(':');
+            if (idParts.Length == 4) // Format: provider:series:season:episode
+            {
+                int season = int.TryParse(idParts[2], out var s) ? s : 1;
+                int episode = int.TryParse(idParts[3], out var e) ? e : 1;
+                
+                // Create a minimal episode metadata
+                var minimalEpisode = new StremioMeta
+                {
+                    Id = seriesMeta.Id,
+                    Name = seriesMeta.Name ?? $"Episode {episode}",
+                    Type = StremioMediaType.Series,
+                    Season = season,
+                    Episode = episode,
+                };
+                episodeVideos = [minimalEpisode];
+                
+                _log.LogInformation(
+                    "Created minimal episode S{Season}E{Episode} for series {Name}",
+                    season,
+                    episode,
+                    seriesMeta.Name
+                );
+            }
+        
+        var seasonGroups = (episodeVideos ?? Enumerable.Empty<StremioMeta>())
+        
             .Where(e =>
                 e.Season.HasValue
                 && (e.Episode.HasValue || e.Number.HasValue)) // Filter out invalid episodes early
