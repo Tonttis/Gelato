@@ -8,6 +8,14 @@
     "owner": "Tonttis",
     "versions": [
       {
+        "changelog": "## [0.26.6.4] - 2026-03-03\n\n### 🐛 Bug Fixes\n\n- Add missing closing brace in anime episode creation logic\n- Correct episodeVideos initialization in SyncSeriesTreesAsync\n",
+        "checksum": "642a99bc708fbc9bbbea39dd421b5c18",
+        "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.6.4/gelato_0.26.6.4.zip",
+        "targetAbi": "10.11.6.0",
+        "timestamp": "2026-03-03T15:19:15Z",
+        "version": "0.26.6.4"
+      },
+      {
         "changelog": "## [0.26.6.3] - 2026-03-03\n\n### 🐛 Bug Fixes\n\n- Create minimal episode when Videos array is missing for anime\n\n### ⚙️ Miscellaneous Tasks\n\n- *(release)* Bump version to v0.26.6.3\n",
         "checksum": "1e50ddb0a681d1db1391dce222748ccf",
         "sourceUrl": "https://github.com/Tonttis/Gelato/releases/download/v0.26.6.3/gelato_0.26.6.3.zip",
